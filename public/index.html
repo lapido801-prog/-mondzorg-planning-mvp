@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preventieve Mondzorg Planning</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1 data-i18n="appTitle">Preventieve Mondzorg Planning</h1>
+        <a class="link-btn" href="/admin">Admin</a>
+      </header>
+
+      <section class="panel">
+        <h2 data-i18n="parentTitle">Online aanmelding voor ouders</h2>
+
+        <div class="inline-grid">
+          <label>
+            <span data-i18n="language">Taal</span>
+            <select id="lang">
+              <option value="nl">Nederlands</option>
+              <option value="en">English</option>
+              <option value="uk">Українська</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="location">Locatie</span>
+            <input id="locationFilter" value="Locatie 1" />
+          </label>
+          <button id="loadDaysBtn" type="button" data-i18n="loadDays">Dagen laden</button>
+        </div>
+
+        <p class="hint" data-i18n="startFixed">Starttijd is altijd 15:00, blokken van 30 min.</p>
+        <p class="hint" data-i18n="contiguousInfo">
+          Nieuwe boekingen vullen altijd het eerstvolgende vrije tijdsblok.
+        </p>
+
+        <form id="bookingForm" class="form-grid">
+          <label>
+            <span data-i18n="chooseDate">Beschikbare dag</span>
+            <select id="serviceDate" required></select>
+          </label>
+          <label>
+            <span data-i18n="parentName">Naam ouder</span>
+            <input id="parentName" required />
+          </label>
+          <label>
+            <span data-i18n="parentEmail">E-mail ouder</span>
+            <input id="parentEmail" type="email" required />
+          </label>
+          <label>
+            <span data-i18n="parentPhone">Telefoon ouder</span>
+            <input id="parentPhone" required />
+          </label>
+          <label>
+            <span data-i18n="childName">Naam kind</span>
+            <input id="childName" required />
+          </label>
+          <label>
+            <span data-i18n="childDob">Geboortedatum kind</span>
+            <input id="childDob" type="date" required />
+          </label>
+          <label class="full">
+            <span data-i18n="notes">Opmerkingen</span>
+            <textarea id="notes" rows="3"></textarea>
+          </label>
+          <button type="submit" data-i18n="submit">Aanmelden</button>
+        </form>
+
+        <p id="status" class="status"></p>
+      </section>
+    </main>
+    <script type="module" src="/parent.js"></script>
+  </body>
+</html>

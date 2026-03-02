@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planning Admin</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1 data-i18n="adminTitle">Beheer planning</h1>
+        <a class="link-btn" href="/">Ouderportaal</a>
+      </header>
+
+      <section class="panel">
+        <div class="inline-grid">
+          <label>
+            <span data-i18n="language">Taal</span>
+            <select id="lang">
+              <option value="nl">Nederlands</option>
+              <option value="en">English</option>
+              <option value="uk">Українська</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="adminKey">Admin sleutel</span>
+            <input id="adminKey" type="password" value="change-me" />
+          </label>
+          <label>
+            <span data-i18n="location">Locatie</span>
+            <input id="location" value="Locatie 1" />
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 data-i18n="serviceDate">Planningsdag</h2>
+        <form id="dayForm" class="inline-grid">
+          <label>
+            <span data-i18n="serviceDate">Planningsdag</span>
+            <input id="serviceDate" type="date" required />
+          </label>
+          <label>
+            <span data-i18n="capacity">Capaciteit (aantal afspraken)</span>
+            <input id="capacity" type="number" min="1" max="40" value="8" required />
+          </label>
+          <label class="checkbox-row">
+            <input id="isEnabled" type="checkbox" checked />
+            <span data-i18n="enabled">Dag actief</span>
+          </label>
+          <button type="submit" data-i18n="saveDay">Dag opslaan</button>
+          <button id="refreshDays" type="button" data-i18n="loadDays">Dagen laden</button>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="serviceDate">Planningsdag</th>
+              <th data-i18n="location">Locatie</th>
+              <th data-i18n="capacity">Capaciteit</th>
+              <th data-i18n="booked">Geboekt</th>
+              <th data-i18n="actions">Acties</th>
+            </tr>
+          </thead>
+          <tbody id="daysTbody"></tbody>
+        </table>
+        <p id="dayStatus" class="status"></p>
+      </section>
+
+      <section class="panel">
+        <h2 data-i18n="appointments">Afspraken</h2>
+        <ul id="appointmentsList" class="appointments"></ul>
+        <p id="appointmentStatus" class="status"></p>
+      </section>
+    </main>
+    <script type="module" src="/admin.js"></script>
+  </body>
+</html>

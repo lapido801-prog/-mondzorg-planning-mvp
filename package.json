@@ -1,0 +1,12 @@
+{
+  "name": "mondzorg-planning-mvp",
+  "version": "1.0.0",
+  "description": "Meertalig planningssysteem voor preventieve mondzorg op locatie",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test --test-isolation=none"
+  }
+}

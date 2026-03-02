@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: mondzorg-planning-mvp
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATA_DIR
+        value: /var/data
+      - key: ADMIN_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+    disk:
+      name: mondzorg-data
+      mountPath: /var/data
+      sizeGB: 1
