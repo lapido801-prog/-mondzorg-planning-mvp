@@ -1,12 +1,12 @@
 services:
   - type: web
     name: mondzorg-planning-mvp
-    runtime: node
+    runtime: docker
     plan: free
     region: frankfurt
     branch: main
-    buildCommand: npm ci
-    startCommand: npm start
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /
     envVars:
       - key: NODE_ENV

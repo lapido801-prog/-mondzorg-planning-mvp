@@ -62,6 +62,7 @@ Tests valideren de kern van de planning (slotselectie en vaste tijden).
 
 ## Deploy naar Render (aanbevolen nu)
 Dit project bevat al een `render.yaml` Blueprint.
+Deze deploy gebruikt Docker (`Dockerfile`) met Node 24.
 
 Belangrijk:
 - De Render service mount een persistente disk op `/var/data`.
