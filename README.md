@@ -65,8 +65,8 @@ Dit project bevat al een `render.yaml` Blueprint.
 Deze deploy gebruikt Docker (`Dockerfile`) met Node 24.
 
 Belangrijk:
-- De Render service mount een persistente disk op `/var/data`.
-- De app leest daardoor productie-data uit `/var/data/planning.db` via `DATA_DIR=/var/data`.
+- In de gratis variant gebruikt de app tijdelijke opslag via `DATA_DIR=/tmp/mondzorg-data`.
+- Daardoor kunnen boekingen verdwijnen na redeploy/restart/sleep.
 
 Stappen:
 1. Zet deze map in een Git-repo en push naar GitHub/GitLab/Bitbucket.
@@ -77,5 +77,3 @@ Stappen:
    - `RESEND_API_KEY` (optioneel)
    - `RESEND_FROM` (optioneel)
 5. Deploy en open de Render URL.
-
-Let op: voor persistent SQLite-opslag via disk is een betaald Render-plan nodig (`starter` of hoger).

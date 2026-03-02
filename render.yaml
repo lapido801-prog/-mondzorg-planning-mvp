@@ -2,7 +2,7 @@ services:
   - type: web
     name: mondzorg-planning-mvp
     runtime: docker
-    plan: starter
+    plan: free
     region: frankfurt
     branch: main
     dockerContext: .
@@ -14,14 +14,10 @@ services:
       - key: PORT
         value: 10000
       - key: DATA_DIR
-        value: /var/data
+        value: /tmp/mondzorg-data
       - key: ADMIN_KEY
         sync: false
       - key: RESEND_API_KEY
         sync: false
       - key: RESEND_FROM
         sync: false
-    disk:
-      name: mondzorg-data
-      mountPath: /var/data
-      sizeGB: 1
