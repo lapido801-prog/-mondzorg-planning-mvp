@@ -1,12 +1,13 @@
 :root {
-  --bg: #f4f7fb;
+  --bg: #f6f8fc;
   --panel: #ffffff;
-  --text: #0f172a;
-  --muted: #475569;
-  --accent: #0f766e;
-  --accent-2: #115e59;
-  --danger: #b91c1c;
-  --border: #dbe3ec;
+  --text: #0f1f45;
+  --muted: #4f5f85;
+  --primary: #102a66;
+  --primary-strong: #0b1f4d;
+  --primary-soft: #e9eefb;
+  --border: #d8e0f1;
+  --danger: #b4233a;
 }
 
 * {
@@ -16,13 +17,13 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: radial-gradient(circle at top right, #d9f6ea 0%, var(--bg) 38%);
+  background: linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
   color: var(--text);
 }
 
 .container {
   width: min(980px, 94vw);
-  margin: 2rem auto;
+  margin: 1.3rem auto 2rem;
   display: grid;
   gap: 1rem;
 }
@@ -31,12 +32,33 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+}
+
+.hero {
+  background: var(--primary);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 1.1rem 1rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.hero-subtitle {
+  margin: 0.35rem 0 0;
+  color: #d8e2ff;
 }
 
 .link-btn {
-  color: var(--accent-2);
+  color: #ffffff;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 10px;
+  padding: 0.45rem 0.75rem;
 }
 
 .panel {
@@ -44,6 +66,10 @@ body {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1rem;
+}
+
+.panel h2 {
+  margin-top: 0;
 }
 
 .inline-grid {
@@ -56,7 +82,21 @@ body {
 .form-grid {
   display: grid;
   gap: 0.8rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.step {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 0.85rem;
+}
+
+.step h3 {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  color: var(--primary);
+  font-size: 1rem;
 }
 
 .full {
@@ -67,6 +107,11 @@ label {
   display: grid;
   gap: 0.3rem;
   font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+label:last-child {
+  margin-bottom: 0;
 }
 
 input,
@@ -76,41 +121,83 @@ button {
   font: inherit;
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 0.55rem 0.7rem;
+  padding: 0.6rem 0.7rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #b8c8f4;
+  outline-offset: 1px;
 }
 
 button {
-  background: var(--accent);
+  background: var(--primary);
   color: #fff;
   border: 0;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 button:hover {
-  background: var(--accent-2);
+  background: var(--primary-strong);
+}
+
+button:disabled {
+  background: #8a99bf;
+  cursor: not-allowed;
+}
+
+.secondary-btn {
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+  border: 1px solid var(--border);
+}
+
+.secondary-btn:hover {
+  background: #d9e3fa;
+}
+
+.tips {
+  margin-bottom: 0.7rem;
+  padding: 0.7rem;
+  border-radius: 10px;
+  background: var(--primary-soft);
 }
 
 .hint {
   color: var(--muted);
-  margin: 0.2rem 0;
+  margin: 0.15rem 0;
 }
 
 .status {
   margin: 0.8rem 0 0;
-  font-weight: 600;
-  color: var(--accent-2);
+  font-weight: 700;
+  color: var(--primary);
   word-break: break-word;
+  background: #eef3ff;
+  border: 1px solid #d6e2ff;
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+}
+
+.status:empty {
+  display: none;
 }
 
 .status.error {
   color: var(--danger);
+  background: #fff2f4;
+  border-color: #f5ccd3;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 th,
@@ -119,6 +206,14 @@ td {
   text-align: left;
   padding: 0.6rem;
   font-size: 0.92rem;
+}
+
+th {
+  background: var(--primary-soft);
+}
+
+tr:last-child td {
+  border-bottom: 0;
 }
 
 .appointments {
@@ -133,6 +228,7 @@ td {
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.6rem;
+  background: #fcfdff;
 }
 
 .checkbox-row {
@@ -140,4 +236,15 @@ td {
   align-items: center;
   gap: 0.5rem;
   margin-top: 1.6rem;
+}
+
+@media (max-width: 720px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .link-btn {
+    margin-top: 0.4rem;
+  }
 }

@@ -3,8 +3,9 @@ import { t } from "./i18n.js";
 const dom = {
   lang: document.getElementById("lang"),
   locationFilter: document.getElementById("locationFilter"),
-  loadDaysBtn: document.getElementById("loadDaysBtn"),
   serviceDate: document.getElementById("serviceDate"),
+  dayHint: document.getElementById("dayHint"),
+  submitBtn: document.getElementById("submitBtn"),
   bookingForm: document.getElementById("bookingForm"),
   status: document.getElementById("status"),
   parentName: document.getElementById("parentName"),
@@ -24,6 +25,10 @@ function setStatus(message, isError = false) {
   dom.status.className = isError ? "status error" : "status";
 }
 
+function setDayHint(message) {
+  dom.dayHint.textContent = message;
+}
+
 function applyTranslations() {
   document.documentElement.lang = getLang();
   document.querySelectorAll("[data-i18n]").forEach((node) => {
@@ -34,6 +39,8 @@ function applyTranslations() {
 
 async function loadDays() {
   setStatus("");
+  setDayHint(t(getLang(), "loadingDays"));
+  dom.submitBtn.disabled = true;
   const location = dom.locationFilter.value.trim();
   const response = await fetch(`/api/public/days?location=${encodeURIComponent(location)}`);
   const data = await response.json();
@@ -47,15 +54,20 @@ async function loadDays() {
     option.value = "";
     option.textContent = t(getLang(), "noDays");
     dom.serviceDate.append(option);
+    setDayHint(t(getLang(), "noDaysHelp"));
     return;
   }
 
+  let totalOpenSlots = 0;
   for (const day of data.days) {
     const option = document.createElement("option");
     option.value = day.serviceDate;
     option.textContent = `${day.serviceDate} (${day.bookedCount}/${day.capacity})`;
     dom.serviceDate.append(option);
+    totalOpenSlots += day.capacity - day.bookedCount;
   }
+  setDayHint(`${t(getLang(), "availableSpots")}: ${totalOpenSlots}`);
+  dom.submitBtn.disabled = false;
 }
 
 async function submitBooking(event) {
@@ -96,14 +108,6 @@ async function submitBooking(event) {
   await loadDays();
 }
 
-dom.loadDaysBtn.addEventListener("click", async () => {
-  try {
-    await loadDays();
-  } catch (error) {
-    setStatus(String(error.message || error), true);
-  }
-});
-
 dom.bookingForm.addEventListener("submit", async (event) => {
   try {
     await submitBooking(event);
@@ -114,6 +118,15 @@ dom.bookingForm.addEventListener("submit", async (event) => {
 
 dom.lang.addEventListener("change", () => {
   applyTranslations();
+  loadDays().catch((error) => setStatus(String(error.message || error), true));
+});
+
+let locationTimer;
+dom.locationFilter.addEventListener("input", () => {
+  window.clearTimeout(locationTimer);
+  locationTimer = window.setTimeout(() => {
+    loadDays().catch((error) => setStatus(String(error.message || error), true));
+  }, 350);
 });
 
 applyTranslations();

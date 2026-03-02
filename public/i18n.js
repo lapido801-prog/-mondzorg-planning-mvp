@@ -3,8 +3,13 @@ export const translations = {
     appTitle: "Preventieve Mondzorg Planning",
     parentTitle: "Online aanmelding voor ouders",
     adminTitle: "Beheer planning",
+    simpleIntro: "Snel aanmelden in 3 stappen: kies dag, vul gegevens in, bevestig.",
+    adminIntro: "Voeg dagen toe en bekijk boekingen per dag en locatie.",
     location: "Locatie",
     chooseDate: "Beschikbare dag",
+    step1Title: "Stap 1: Kies dag",
+    step2Title: "Stap 2: Gegevens ouder",
+    step3Title: "Stap 3: Gegevens kind",
     parentName: "Naam ouder",
     parentEmail: "E-mail ouder",
     parentPhone: "Telefoon ouder",
@@ -13,7 +18,10 @@ export const translations = {
     notes: "Opmerkingen",
     submit: "Aanmelden",
     loadDays: "Dagen laden",
+    loadingDays: "Beschikbare dagen laden...",
     noDays: "Geen beschikbare dagen gevonden.",
+    noDaysHelp: "Geen plek gevonden voor deze locatie. Vraag de beheerder om dagen toe te voegen.",
+    availableSpots: "Beschikbare plekken",
     successTitle: "Aanmelding bevestigd",
     bookingRef: "Boekingscode",
     appointmentTime: "Afspraaktijd",
@@ -35,8 +43,13 @@ export const translations = {
     appTitle: "Preventive Dental Care Scheduler",
     parentTitle: "Online parent registration",
     adminTitle: "Planning administration",
+    simpleIntro: "Quick registration in 3 steps: pick a day, fill details, confirm.",
+    adminIntro: "Add days and review bookings per day and location.",
     location: "Location",
     chooseDate: "Available day",
+    step1Title: "Step 1: Choose day",
+    step2Title: "Step 2: Parent details",
+    step3Title: "Step 3: Child details",
     parentName: "Parent name",
     parentEmail: "Parent email",
     parentPhone: "Parent phone",
@@ -45,7 +58,10 @@ export const translations = {
     notes: "Notes",
     submit: "Register",
     loadDays: "Load days",
+    loadingDays: "Loading available days...",
     noDays: "No available days found.",
+    noDaysHelp: "No slots found for this location. Ask admin to add planning days.",
+    availableSpots: "Available spots",
     successTitle: "Registration confirmed",
     bookingRef: "Booking code",
     appointmentTime: "Appointment time",
@@ -99,5 +115,5 @@ export const translations = {
 
 export function t(lang, key) {
   const language = translations[lang] ? lang : "nl";
-  return translations[language][key] || key;
+  return translations[language][key] || translations.nl[key] || key;
 }

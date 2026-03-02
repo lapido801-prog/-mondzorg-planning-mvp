@@ -8,8 +8,13 @@
   </head>
   <body>
     <main class="container">
-      <header class="header">
-        <h1 data-i18n="adminTitle">Beheer planning</h1>
+      <header class="header hero">
+        <div>
+          <h1 data-i18n="adminTitle">Beheer planning</h1>
+          <p class="hero-subtitle" data-i18n="adminIntro">
+            Voeg dagen toe en bekijk boekingen per dag en locatie.
+          </p>
+        </div>
         <a class="link-btn" href="/">Ouderportaal</a>
       </header>
 
@@ -50,7 +55,7 @@
             <span data-i18n="enabled">Dag actief</span>
           </label>
           <button type="submit" data-i18n="saveDay">Dag opslaan</button>
-          <button id="refreshDays" type="button" data-i18n="loadDays">Dagen laden</button>
+          <button id="refreshDays" type="button" class="secondary-btn" data-i18n="loadDays">Dagen laden</button>
         </form>
 
         <table>

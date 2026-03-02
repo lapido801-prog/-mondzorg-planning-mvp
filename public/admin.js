@@ -150,5 +150,16 @@ dom.lang.addEventListener("change", () => {
   loadDays().catch((error) => setStatus(dom.dayStatus, String(error.message || error), true));
 });
 
+let loadTimer;
+function scheduleDaysRefresh() {
+  window.clearTimeout(loadTimer);
+  loadTimer = window.setTimeout(() => {
+    loadDays().catch((error) => setStatus(dom.dayStatus, String(error.message || error), true));
+  }, 300);
+}
+
+dom.location.addEventListener("input", scheduleDaysRefresh);
+dom.adminKey.addEventListener("input", scheduleDaysRefresh);
+
 applyTranslations();
 loadDays().catch((error) => setStatus(dom.dayStatus, String(error.message || error), true));
