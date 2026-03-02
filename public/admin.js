@@ -20,7 +20,7 @@ const dom = {
 
 let currentLang = SUPPORTED_LANGS.includes(window.localStorage.getItem("lang"))
   ? window.localStorage.getItem("lang")
-  : "nl";
+  : "uk";
 
 function getLang() {
   return currentLang;
@@ -72,7 +72,7 @@ async function loadDays() {
   dom.daysTbody.innerHTML = "";
   for (const day of data.days) {
     const row = document.createElement("tr");
-    const activeLabel = day.isEnabled === 1 ? "on" : "off";
+    const activeLabel = day.isEnabled === 1 ? t(getLang(), "enabledShort") : t(getLang(), "disabledShort");
     row.innerHTML =
       `<td>${day.serviceDate}</td>` +
       `<td>${day.location}</td>` +
@@ -103,7 +103,7 @@ async function saveDay(event) {
   if (!response.ok) {
     throw new Error(data.error || "Opslaan mislukt.");
   }
-  setStatus(dom.dayStatus, "Opgeslagen.");
+  setStatus(dom.dayStatus, t(getLang(), "saved"));
   await loadDays();
 }
 
@@ -125,9 +125,10 @@ async function loadAppointments(serviceDate, location) {
   }
   for (const appointment of data.appointments) {
     const item = document.createElement("li");
+    const emailInfo = appointment.parentEmail ? ` (${appointment.parentEmail})` : "";
     item.textContent =
       `${appointment.startTime}-${appointment.endTime} | ${appointment.childName} | ` +
-      `${appointment.parentName} (${appointment.parentEmail}) | ${appointment.bookingRef}`;
+      `${appointment.parentName}${emailInfo} | ${appointment.bookingRef}`;
     dom.appointmentsList.append(item);
   }
 }

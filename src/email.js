@@ -35,6 +35,10 @@ const EMAIL_TEXT = {
 };
 
 export async function sendConfirmationEmail(booking) {
+  if (!booking.parentEmail) {
+    return { sent: false, reason: "no-email" };
+  }
+
   const lang = EMAIL_TEXT[booking.language] ? booking.language : "nl";
   const content = EMAIL_TEXT[lang](booking);
 

@@ -8,6 +8,7 @@ const dom = {
   locationFilter: document.getElementById("locationFilter"),
   serviceDate: document.getElementById("serviceDate"),
   dayHint: document.getElementById("dayHint"),
+  bookFirstBtn: document.getElementById("bookFirstBtn"),
   submitBtn: document.getElementById("submitBtn"),
   bookingForm: document.getElementById("bookingForm"),
   status: document.getElementById("status"),
@@ -21,7 +22,7 @@ const dom = {
 
 let currentLang = SUPPORTED_LANGS.includes(window.localStorage.getItem("lang"))
   ? window.localStorage.getItem("lang")
-  : "nl";
+  : "uk";
 
 function getLang() {
   return currentLang;
@@ -61,6 +62,7 @@ async function loadDays() {
   setStatus("");
   setDayHint(t(getLang(), "loadingDays"));
   dom.submitBtn.disabled = true;
+  dom.bookFirstBtn.disabled = true;
   const location = dom.locationFilter.value.trim();
   const response = await fetch(`/api/public/days?location=${encodeURIComponent(location)}`);
   const data = await response.json();
@@ -88,15 +90,18 @@ async function loadDays() {
   }
   setDayHint(`${t(getLang(), "availableSpots")}: ${totalOpenSlots}`);
   dom.submitBtn.disabled = false;
+  dom.bookFirstBtn.disabled = false;
 }
 
-async function submitBooking(event) {
-  event.preventDefault();
+async function submitBooking(useFirstAvailable = false) {
+  if (!dom.bookingForm.reportValidity()) {
+    return;
+  }
   setStatus("");
 
   const payload = {
     language: getLang(),
-    serviceDate: dom.serviceDate.value,
+    serviceDate: useFirstAvailable ? "" : dom.serviceDate.value,
     location: dom.locationFilter.value.trim(),
     parentName: dom.parentName.value.trim(),
     parentEmail: dom.parentEmail.value.trim(),
@@ -130,8 +135,17 @@ async function submitBooking(event) {
 }
 
 dom.bookingForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
   try {
-    await submitBooking(event);
+    await submitBooking(false);
+  } catch (error) {
+    setStatus(String(error.message || error), true);
+  }
+});
+
+dom.bookFirstBtn.addEventListener("click", async () => {
+  try {
+    await submitBooking(true);
   } catch (error) {
     setStatus(String(error.message || error), true);
   }

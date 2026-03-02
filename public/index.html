@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -60,8 +60,8 @@
               <input id="parentName" required />
             </label>
             <label>
-              <span data-i18n="parentEmail">E-mail ouder</span>
-              <input id="parentEmail" type="email" required />
+              <span data-i18n="parentEmailOptional">E-mail ouder (optioneel)</span>
+              <input id="parentEmail" type="email" />
             </label>
             <label>
               <span data-i18n="parentPhone">Telefoon ouder</span>
@@ -80,12 +80,17 @@
               <input id="childDob" type="date" required />
             </label>
             <label class="full">
-              <span data-i18n="notes">Opmerkingen</span>
+              <span data-i18n="notes">Opmerkingen (optioneel)</span>
               <textarea id="notes" rows="3"></textarea>
             </label>
           </div>
 
-          <button id="submitBtn" type="submit" data-i18n="submit">Aanmelden</button>
+          <div class="actions-row full">
+            <button id="bookFirstBtn" type="button" class="secondary-btn" data-i18n="firstAvailableBtn">
+              Eerste beschikbare plek
+            </button>
+            <button id="submitBtn" type="submit" data-i18n="submit">Aanmelden op gekozen dag</button>
+          </div>
         </form>
 
         <p id="status" class="status"></p>

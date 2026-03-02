@@ -121,6 +121,16 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.actions-row button {
+  min-width: 220px;
+}
+
 .step {
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -282,5 +292,10 @@ tr:last-child td {
 
   .link-btn {
     margin-top: 0.4rem;
+  }
+
+  .actions-row button {
+    width: 100%;
+    min-width: 0;
   }
 }

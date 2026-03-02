@@ -154,23 +154,26 @@ function normalizeBookingInput(input) {
     childName: String(input.childName || "").trim(),
     childDob: String(input.childDob || "").trim(),
     notes: String(input.notes || "").trim(),
-    language: ["nl", "en", "uk"].includes(input.language) ? input.language : "nl"
+    language: ["nl", "en", "uk"].includes(input.language) ? input.language : "uk"
   };
 
-  if (!isIsoDate(normalized.serviceDate)) {
+  if (normalized.serviceDate && !isIsoDate(normalized.serviceDate)) {
     throw new Error("Kies een geldige dag.");
   }
   if (!isIsoDate(normalized.childDob)) {
     throw new Error("Geboortedatum moet in formaat YYYY-MM-DD zijn.");
   }
-  if (normalized.serviceDate < todayInAmsterdam()) {
+  if (normalized.serviceDate && normalized.serviceDate < todayInAmsterdam()) {
     throw new Error("Boeken in het verleden is niet toegestaan.");
   }
   if (!normalized.location) {
     throw new Error("Locatie is verplicht.");
   }
-  if (!normalized.parentName || !normalized.parentEmail || !normalized.parentPhone) {
-    throw new Error("Naam, e-mail en telefoon van ouder zijn verplicht.");
+  if (!normalized.parentName || !normalized.parentPhone) {
+    throw new Error("Naam en telefoon van ouder zijn verplicht.");
+  }
+  if (normalized.parentEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized.parentEmail)) {
+    throw new Error("E-mail heeft geen geldig formaat.");
   }
   if (!normalized.childName) {
     throw new Error("Naam van kind is verplicht.");
@@ -183,15 +186,41 @@ export function createBooking(payload) {
   const input = normalizeBookingInput(payload);
   db.exec("BEGIN IMMEDIATE TRANSACTION;");
   try {
-    const day = db.prepare(`
-      SELECT capacity, is_enabled AS isEnabled
-      FROM available_days
-      WHERE service_date = ? AND location = ?
-      LIMIT 1
-    `).get(input.serviceDate, input.location);
+    let serviceDate = input.serviceDate;
+    let day = null;
+    if (serviceDate) {
+      day = db.prepare(`
+        SELECT service_date AS serviceDate, capacity, is_enabled AS isEnabled
+        FROM available_days
+        WHERE service_date = ? AND location = ?
+        LIMIT 1
+      `).get(serviceDate, input.location);
 
-    if (!day || day.isEnabled !== 1) {
-      throw new Error("Deze dag is niet beschikbaar voor boekingen.");
+      if (!day || day.isEnabled !== 1) {
+        throw new Error("Deze dag is niet beschikbaar voor boekingen.");
+      }
+    } else {
+      day = db.prepare(`
+        SELECT
+          d.service_date AS serviceDate,
+          d.capacity AS capacity
+        FROM available_days d
+        LEFT JOIN appointments a
+          ON a.service_date = d.service_date
+          AND a.location = d.location
+        WHERE d.location = ?
+          AND d.is_enabled = 1
+          AND d.service_date >= ?
+        GROUP BY d.service_date, d.capacity
+        HAVING COUNT(a.id) < d.capacity
+        ORDER BY d.service_date ASC
+        LIMIT 1
+      `).get(input.location, todayInAmsterdam());
+
+      if (!day) {
+        throw new Error("Geen beschikbare plek gevonden voor deze locatie.");
+      }
+      serviceDate = day.serviceDate;
     }
 
     const takenSlots = db.prepare(`
@@ -199,11 +228,14 @@ export function createBooking(payload) {
       FROM appointments
       WHERE service_date = ? AND location = ?
       ORDER BY slot_index ASC
-    `).all(input.serviceDate, input.location).map((row) => row.slotIndex);
+    `).all(serviceDate, input.location).map((row) => row.slotIndex);
 
     const nextSlot = computeNextSlot(takenSlots, day.capacity);
     if (nextSlot === null) {
-      throw new Error("Deze dag is al volgeboekt.");
+      if (input.serviceDate) {
+        throw new Error("Deze dag is al volgeboekt.");
+      }
+      throw new Error("Geen beschikbare plek gevonden voor deze locatie.");
     }
 
     const { startTime, endTime } = slotWindow(nextSlot);
@@ -217,7 +249,7 @@ export function createBooking(payload) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       bookingRef,
-      input.serviceDate,
+      serviceDate,
       input.location,
       nextSlot,
       startTime,
@@ -236,6 +268,7 @@ export function createBooking(payload) {
     return {
       bookingRef,
       ...input,
+      serviceDate,
       slotIndex: nextSlot,
       startTime,
       endTime
