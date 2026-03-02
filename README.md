@@ -77,3 +77,5 @@ Stappen:
    - `RESEND_API_KEY` (optioneel)
    - `RESEND_FROM` (optioneel)
 5. Deploy en open de Render URL.
+
+Let op: voor persistent SQLite-opslag via disk is een betaald Render-plan nodig (`starter` of hoger).
