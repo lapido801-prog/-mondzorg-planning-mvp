@@ -1,7 +1,10 @@
 import { t } from "./i18n.js";
 
+const SUPPORTED_LANGS = ["nl", "en", "uk"];
+
 const dom = {
-  lang: document.getElementById("lang"),
+  langSwitch: document.getElementById("langSwitch"),
+  langButtons: Array.from(document.querySelectorAll(".lang-btn[data-lang]")),
   adminKey: document.getElementById("adminKey"),
   location: document.getElementById("location"),
   dayForm: document.getElementById("dayForm"),
@@ -15,8 +18,12 @@ const dom = {
   appointmentStatus: document.getElementById("appointmentStatus")
 };
 
+let currentLang = SUPPORTED_LANGS.includes(window.localStorage.getItem("lang"))
+  ? window.localStorage.getItem("lang")
+  : "nl";
+
 function getLang() {
-  return dom.lang.value || "nl";
+  return currentLang;
 }
 
 function setStatus(node, message, isError = false) {
@@ -29,6 +36,19 @@ function headers() {
     "Content-Type": "application/json",
     "x-admin-key": dom.adminKey.value.trim()
   };
+}
+
+function setLang(lang) {
+  if (!SUPPORTED_LANGS.includes(lang)) {
+    return;
+  }
+  currentLang = lang;
+  window.localStorage.setItem("lang", lang);
+  dom.langButtons.forEach((button) => {
+    const isActive = button.dataset.lang === lang;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
 }
 
 function applyTranslations() {
@@ -145,7 +165,16 @@ dom.daysTbody.addEventListener("click", async (event) => {
   }
 });
 
-dom.lang.addEventListener("change", () => {
+dom.langSwitch.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLButtonElement)) {
+    return;
+  }
+  const nextLang = target.dataset.lang;
+  if (!nextLang || nextLang === getLang()) {
+    return;
+  }
+  setLang(nextLang);
   applyTranslations();
   loadDays().catch((error) => setStatus(dom.dayStatus, String(error.message || error), true));
 });
@@ -161,5 +190,6 @@ function scheduleDaysRefresh() {
 dom.location.addEventListener("input", scheduleDaysRefresh);
 dom.adminKey.addEventListener("input", scheduleDaysRefresh);
 
+setLang(currentLang);
 applyTranslations();
 loadDays().catch((error) => setStatus(dom.dayStatus, String(error.message || error), true));

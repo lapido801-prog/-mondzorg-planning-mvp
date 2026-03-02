@@ -72,6 +72,42 @@ body {
   margin-top: 0;
 }
 
+.field-block {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field-title {
+  font-size: 0.95rem;
+}
+
+.lang-switch {
+  display: inline-flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.lang-btn {
+  background: #ffffff;
+  color: var(--primary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.42rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.lang-btn:hover {
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+}
+
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
 .inline-grid {
   display: grid;
   gap: 0.8rem;

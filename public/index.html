@@ -22,14 +22,14 @@
         <h2 data-i18n="parentTitle">Online aanmelding voor ouders</h2>
 
         <div class="inline-grid">
-          <label>
-            <span data-i18n="language">Taal</span>
-            <select id="lang">
-              <option value="nl">Nederlands</option>
-              <option value="en">English</option>
-              <option value="uk">Українська</option>
-            </select>
-          </label>
+          <div class="field-block">
+            <span class="field-title" data-i18n="language">Taal</span>
+            <div class="lang-switch" id="langSwitch" role="group" aria-label="Taal">
+              <button type="button" class="lang-btn" data-lang="nl">Nederlands</button>
+              <button type="button" class="lang-btn" data-lang="en">English</button>
+              <button type="button" class="lang-btn" data-lang="uk">Українська</button>
+            </div>
+          </div>
           <label>
             <span data-i18n="location">Locatie</span>
             <input id="locationFilter" value="Locatie 1" />

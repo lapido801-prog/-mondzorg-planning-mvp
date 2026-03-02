@@ -1,7 +1,10 @@
 import { t } from "./i18n.js";
 
+const SUPPORTED_LANGS = ["nl", "en", "uk"];
+
 const dom = {
-  lang: document.getElementById("lang"),
+  langSwitch: document.getElementById("langSwitch"),
+  langButtons: Array.from(document.querySelectorAll(".lang-btn[data-lang]")),
   locationFilter: document.getElementById("locationFilter"),
   serviceDate: document.getElementById("serviceDate"),
   dayHint: document.getElementById("dayHint"),
@@ -16,8 +19,12 @@ const dom = {
   notes: document.getElementById("notes")
 };
 
+let currentLang = SUPPORTED_LANGS.includes(window.localStorage.getItem("lang"))
+  ? window.localStorage.getItem("lang")
+  : "nl";
+
 function getLang() {
-  return dom.lang.value || "nl";
+  return currentLang;
 }
 
 function setStatus(message, isError = false) {
@@ -27,6 +34,19 @@ function setStatus(message, isError = false) {
 
 function setDayHint(message) {
   dom.dayHint.textContent = message;
+}
+
+function setLang(lang) {
+  if (!SUPPORTED_LANGS.includes(lang)) {
+    return;
+  }
+  currentLang = lang;
+  window.localStorage.setItem("lang", lang);
+  dom.langButtons.forEach((button) => {
+    const isActive = button.dataset.lang === lang;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
 }
 
 function applyTranslations() {
@@ -102,8 +122,9 @@ async function submitBooking(event) {
     `${t(getLang(), "bookingRef")}: ${booking.bookingRef} | ` +
     `${t(getLang(), "appointmentTime")}: ${booking.serviceDate} ${booking.startTime}-${booking.endTime}`;
   setStatus(message);
+  const chosenLang = getLang();
   dom.bookingForm.reset();
-  dom.lang.value = payload.language;
+  setLang(chosenLang);
   dom.locationFilter.value = payload.location;
   await loadDays();
 }
@@ -116,7 +137,16 @@ dom.bookingForm.addEventListener("submit", async (event) => {
   }
 });
 
-dom.lang.addEventListener("change", () => {
+dom.langSwitch.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLButtonElement)) {
+    return;
+  }
+  const nextLang = target.dataset.lang;
+  if (!nextLang || nextLang === getLang()) {
+    return;
+  }
+  setLang(nextLang);
   applyTranslations();
   loadDays().catch((error) => setStatus(String(error.message || error), true));
 });
@@ -129,5 +159,6 @@ dom.locationFilter.addEventListener("input", () => {
   }, 350);
 });
 
+setLang(currentLang);
 applyTranslations();
 loadDays().catch((error) => setStatus(String(error.message || error), true));
